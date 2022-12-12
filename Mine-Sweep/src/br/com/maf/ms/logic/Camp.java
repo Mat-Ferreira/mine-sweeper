@@ -2,11 +2,12 @@ package br.com.maf.ms.logic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+
+import br.com.maf.ms.exception.ExplosionException;
 
 public class Camp {
-	private boolean mined = false;
-	private boolean openCamp = false;
+	private boolean isMineField = false;
+	private boolean open = false;
 	private boolean marked = false;
 	
 	private List<Camp> neighbours = new ArrayList<>();
@@ -14,9 +15,34 @@ public class Camp {
 	private final int line;
 	private final int column;
 	
-	public Camp(int linha, int coluna) {
+	Camp(int linha, int coluna) {
 		column = coluna;
 		line = linha;
+	}
+	
+	void switchMarked() {
+		if(!open) {
+			marked = !marked;
+		}
+	}
+	
+	boolean openField() {
+		if(!open && !marked) {
+			open = true;
+			if (isMineField) {
+				throw new ExplosionException();
+			}
+			if (safeNeighbours()) {
+				neighbours.forEach(c -> c.openField());
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	boolean safeNeighbours() {
+		
+		return neighbours.stream().noneMatch(c -> c.isMineField);
 	}
 	
 	boolean addNeighbour(Camp vizinho) {
@@ -49,11 +75,21 @@ public class Camp {
 		}
 		return false;
 	}
-
-	public void showNeighbours() {
-		Consumer<Camp> showInfo = c -> {
-			System.out.printf("Campo(%d, %d) %n", c.line, c.column);
-		};
-		neighbours.stream().forEach(showInfo);
+	
+	void setMine() {
+		isMineField = true;
+	}
+	
+	//Getters and setters
+	public boolean isMarked() {
+		return marked;
+	}
+	
+	public boolean isOpen() {
+		return open;
+	}
+	
+	public void setIsOpen(boolean option) {
+		open = option;
 	}
 }
