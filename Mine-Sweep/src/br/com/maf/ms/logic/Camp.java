@@ -81,10 +81,16 @@ public class Camp {
 	}
 	
 	//Getters and setters
+	
+	
 	public boolean isMarked() {
 		return marked;
 	}
 	
+	public boolean isMineField() {
+		return mineField;
+	}
+
 	public int getLine() {
 		return line;
 	}

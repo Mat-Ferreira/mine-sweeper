@@ -1,6 +1,7 @@
 package br.com.maf.ms.logic;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -135,5 +136,91 @@ class TesteCamp {
 		vizinho2.addNeighbour(vizinho3);
 		
 		assertFalse(vizinho2.isOpen() && vizinho3.isOpen());
+	}
+	
+	@Test
+	void restartSetsEveryCampAtributeToFalse() {
+		campo.setMine();
+		campo.switchMarked();
+		campo.setIsOpen(true);
+		
+		campo.restart();
+		
+		assertFalse(campo.isMineField() || campo.isMarked() || campo.isOpen());
+	}
+		
+	@Test
+	void markedCampReturnsXfromToString() {
+		campo.switchMarked();
+		String result = campo.toString();
+		assertEquals("x", result);
+	}
+	
+	@Test
+	void openMinedCampReturnsStarFromToString() {
+		campo.openField();
+		campo.setMine();
+		String result = campo.toString();
+		assertEquals("*", result);
+	}
+	
+	@Test
+	void openCampWithMinedNeighbourReturnsBombNumbersFromToString() {
+		Camp n1 = new Camp(2,2);
+		n1.setMine();
+		Camp n2 = new Camp(2,3);
+		n1.setMine();
+		Camp n3 = new Camp(4,4);
+		
+		n1.setMine();
+		n2.setMine();
+		n3.setMine();
+		
+		campo.addNeighbour(n1);
+		campo.addNeighbour(n2);
+		campo.addNeighbour(n3);
+		campo.openField();
+		
+		String result = campo.toString();
+		assertEquals("3", result);
+	}
+	
+	@Test
+	void openCampWithNoMinedNeighbourReturnsBlankFromToString() {
+		Camp n1 = new Camp(2,2);
+		Camp n2 = new Camp(2,3);
+		Camp n3 = new Camp(4,4);
+		
+		campo.addNeighbour(n1);
+		campo.addNeighbour(n2);
+		campo.addNeighbour(n3);
+		
+		campo.openField();
+		String result = campo.toString();
+		assertEquals(" ", result);
+	}
+	
+	@Test
+	void closedCampReturnsInterrogationFromToString() {
+		String result = campo.toString();
+		assertEquals("?", result);
+	}
+	
+	@Test
+	void openAndSafeCampReachedTheObjective() {
+		campo.setIsOpen(true);
+		assertTrue(campo.reachObjective());
+	}
+	
+	@Test
+	void markedMinedCampReachedTheObjective() {
+		campo.setMine();
+		campo.switchMarked();
+		assertTrue(campo.reachObjective());
+	}
+	
+	@Test
+	void closedCampoDidntReachObjective() {
+		assertFalse(campo.reachObjective());
 	}
 }
