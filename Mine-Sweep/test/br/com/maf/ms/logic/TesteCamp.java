@@ -136,6 +136,4 @@ class TesteCamp {
 		
 		assertFalse(vizinho2.isOpen() && vizinho3.isOpen());
 	}
-	
-
 }
