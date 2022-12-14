@@ -6,7 +6,7 @@ import java.util.List;
 import br.com.maf.ms.exception.ExplosionException;
 
 public class Camp {
-	private boolean isMineField = false;
+	private boolean mineField = false;
 	private boolean open = false;
 	private boolean marked = false;
 	
@@ -29,7 +29,7 @@ public class Camp {
 	boolean openField() {
 		if(!open && !marked) {
 			open = true;
-			if (isMineField) {
+			if (mineField) {
 				throw new ExplosionException();
 			}
 			if (safeNeighbours()) {
@@ -42,7 +42,7 @@ public class Camp {
 	
 	boolean safeNeighbours() {
 		
-		return neighbours.stream().noneMatch(c -> c.isMineField);
+		return neighbours.stream().noneMatch(c -> c.mineField);
 	}
 	
 	boolean addNeighbour(Camp vizinho) {
@@ -77,7 +77,7 @@ public class Camp {
 	}
 	
 	void setMine() {
-		isMineField = true;
+		mineField = true;
 	}
 	
 	//Getters and setters
@@ -85,11 +85,55 @@ public class Camp {
 		return marked;
 	}
 	
+	public int getLine() {
+		return line;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+	
 	public boolean isOpen() {
 		return open;
 	}
-	
+
 	public void setIsOpen(boolean option) {
 		open = option;
+	}
+	
+	boolean reachObjective() {
+		boolean revealed = !mineField && open;
+		boolean fieldProtected = mineField && marked;
+		
+		return revealed || fieldProtected;
+	}
+	
+	long minesAround() {
+		return neighbours.stream().filter(v -> v.mineField).count();
+	}
+	
+	void restart() {
+		mineField = false;
+		marked = false;
+		open = false;
+	}
+	
+	@Override
+	public String toString() {
+		if(marked) {
+			return "x";
+		}
+		if (open && mineField) {
+			return "*";
+		}
+		
+		if (open && minesAround() > 0) {
+			return ""+ minesAround();
+		}
+		
+		if (open) {
+			return " ";
+		}
+		return "?";
 	}
 }
