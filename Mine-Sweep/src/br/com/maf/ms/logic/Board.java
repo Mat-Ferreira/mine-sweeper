@@ -7,8 +7,7 @@ import java.util.function.Predicate;
 public class Board {
 	private int lines;
 	private int columns;
-	
-	private int amountOfMines;
+	private int amountOfMines;	
 	
 	private final List<Camp> camps = new ArrayList<>();
 
@@ -58,5 +57,19 @@ public class Board {
 	public void restartBoard() {
 		camps.stream().forEach(c -> c.restart());
 		setMineCamps();
+	}
+	
+	//Getters & setters
+	
+	public int getLines() {
+		return lines;
+	}
+
+	public int getColumns() {
+		return columns;
+	}
+
+	public List<Camp> getCamps() {
+		return camps;
 	}
 }
