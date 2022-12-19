@@ -61,4 +61,24 @@ class TesteBoard {
 		assertFalse(board.reachObjective());
 	}
 
+	@Test
+	void TestBoardToStringWorking() {
+		board = new Board(1,3,0);
+		String result = board.toString();
+		assertEquals(" ?  ?  ? \n", result);
+	}
+	
+	@Test
+	void TestOpeningClosedCampWorking() {
+		boolean result = board.openCamp(3, 3);
+		assertTrue(result);
+	}
+	
+	@Test
+	void TestMarkingCamp() {
+		board = new Board(1,3,1);
+		board.switchMark(0, 2);
+		String result = board.toString();
+		assertEquals(" ?  ?  x \n", result);
+	}
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import br.com.maf.ms.exception.ExplosionException;
+
 public class Board {
 	private int lines;
 	private int columns;
@@ -20,6 +22,27 @@ public class Board {
 		setNeighbours();
 		setMineCamps();
 		
+	}
+	
+	public boolean openCamp(int line, int column) {
+		try {
+			camps.parallelStream()
+			.filter(c -> c.getLine() == line && c.getColumn() == column)
+			.findFirst()
+			.ifPresent(c -> c.openField());
+			return true;
+		} catch (ExplosionException e) {
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public void switchMark(int line, int column) {
+			camps.parallelStream()
+			.filter(c -> c.getLine() == line && c.getColumn() == column)
+			.findFirst()
+			.ifPresent(c -> c.switchMarked());
 	}
 
 	private void creatCamps() {
@@ -57,6 +80,23 @@ public class Board {
 	public void restartBoard() {
 		camps.stream().forEach(c -> c.restart());
 		setMineCamps();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for (int l = 0; l < lines; l++) {
+			for (int c = 0; c < columns; c++) {
+				sb.append(" ");
+				sb.append(camps.get(i));
+				sb.append(" ");
+				i++;
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
 	}
 	
 	//Getters & setters
