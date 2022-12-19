@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import br.com.maf.ms.exception.ExplosionException;
 
 public class Board {
 	private int lines;
@@ -25,17 +24,11 @@ public class Board {
 	}
 	
 	public boolean openCamp(int line, int column) {
-		try {
 			camps.parallelStream()
 			.filter(c -> c.getLine() == line && c.getColumn() == column)
 			.findFirst()
 			.ifPresent(c -> c.openField());
 			return true;
-		} catch (ExplosionException e) {
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
 	}
 	
 	public void switchMark(int line, int column) {
