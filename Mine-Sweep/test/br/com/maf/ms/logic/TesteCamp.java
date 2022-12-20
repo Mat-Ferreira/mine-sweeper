@@ -197,7 +197,7 @@ class TesteCamp {
 		
 		campo.openField();
 		String result = campo.toString();
-		assertEquals(" ", result);
+		assertEquals("S", result);
 	}
 	
 	@Test

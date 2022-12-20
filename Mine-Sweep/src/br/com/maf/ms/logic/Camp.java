@@ -20,10 +20,10 @@ public class Camp {
 		line = linha;
 	}
 	
-	void switchMarked() {
-		if(!open) {
-			marked = !marked;
-		}
+	void restart() {
+		mineField = false;
+		marked = false;
+		open = false;
 	}
 	
 	boolean openField() {
@@ -40,12 +40,16 @@ public class Camp {
 		return false;
 	}
 	
-	boolean safeNeighbours() {
-		
-		return neighbours.stream().noneMatch(c -> c.mineField);
+	boolean IgnoreBombAndOpen() {
+		this.setMarked(false);
+		if(!open) {
+			open = true;
+			return true;
+		}
+		return false;
 	}
 	
-	boolean addNeighbour(Camp vizinho) {
+boolean addNeighbour(Camp vizinho) {
 		
 		// Board limitations
 		boolean lineWithinBoard = vizinho.line <= 10 && vizinho.line >= 0;
@@ -75,16 +79,37 @@ public class Camp {
 		}
 		return false;
 	}
-	
-	void setMine() {
-		mineField = true;
+
+	boolean reachObjective() {
+		boolean revealed = !mineField && open;
+		boolean fieldProtected = mineField && marked;
+		
+		return revealed || fieldProtected;
+	}
+
+	boolean safeNeighbours() {
+		return neighbours.stream().noneMatch(c -> c.mineField);
 	}
 	
-	//Getters and setters
-	
+	void setMine() {
+		// Not a setter!
+		mineField = true;
+	}
+		
+	////////////   Getters and setters   //////////////
 	
 	public boolean isMarked() {
 		return marked;
+	}
+	
+	private void setMarked(boolean b) {
+		this.marked = b;
+	}
+	
+	void switchMarked() {
+		if(!open) {
+			marked = !marked;
+		}
 	}
 	
 	public boolean isMineField() {
@@ -107,21 +132,8 @@ public class Camp {
 		open = option;
 	}
 	
-	boolean reachObjective() {
-		boolean revealed = !mineField && open;
-		boolean fieldProtected = mineField && marked;
-		
-		return revealed || fieldProtected;
-	}
-	
 	long minesAround() {
 		return neighbours.stream().filter(v -> v.mineField).count();
-	}
-	
-	void restart() {
-		mineField = false;
-		marked = false;
-		open = false;
 	}
 	
 	@Override
@@ -138,7 +150,7 @@ public class Camp {
 		}
 		
 		if (open) {
-			return " ";
+			return "S";
 		}
 		return "?";
 	}

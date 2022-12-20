@@ -19,8 +19,13 @@ public class Board {
 		
 		creatCamps();
 		setNeighbours();
-		setMineCamps();
-		
+		setMineCamps();	
+	}
+	
+	public void showAllCamps() {
+		// Opens each camp of the board so that the value shows when the board is printed
+		camps.stream().forEach(c -> c.IgnoreBombAndOpen());
+//		camps.get(0).IgnoreBombAndOpen();
 	}
 	
 	public boolean openCamp(int line, int column) {
@@ -63,7 +68,7 @@ public class Board {
 			int random = (int) (Math.random() * camps.size());
 			camps.get(random).setMine();	
 		} 
-		while (minesSet < amountOfMines);
+		while (minesSet < amountOfMines-1);
 	}
 	
 	public boolean reachObjective() {
@@ -75,8 +80,7 @@ public class Board {
 		setMineCamps();
 	}
 	
-	@Override
-	public String toString() {
+	private String buildBoard() {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		for (int l = 0; l < lines; l++) {
@@ -88,11 +92,15 @@ public class Board {
 			}
 			sb.append("\n");
 		}
-		
 		return sb.toString();
 	}
 	
-	//Getters & setters
+	@Override
+	public String toString() {
+		return buildBoard();
+	}
+	
+	////////////   Getters and setters   //////////////
 	
 	public int getLines() {
 		return lines;

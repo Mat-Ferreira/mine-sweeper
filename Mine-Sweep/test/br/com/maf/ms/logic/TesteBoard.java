@@ -6,9 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import br.com.maf.ms.exception.ExplosionException;
 
 class TesteBoard {
 	
@@ -70,8 +73,16 @@ class TesteBoard {
 	
 	@Test
 	void TestOpeningClosedCampWorking() {
-		boolean result = board.openCamp(3, 3);
-		assertTrue(result);
+		boolean result = false;
+		try {
+		result = board.openCamp(3, 3);
+		} catch (ExplosionException e) {
+			result = true;
+		} finally {
+			assertTrue(result);
+		} 
+
+	
 	}
 	
 	@Test

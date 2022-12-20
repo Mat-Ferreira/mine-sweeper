@@ -7,7 +7,6 @@ import br.com.maf.ms.exception.ExplosionException;
 import br.com.maf.ms.logic.Board;
 
 
-
 public class BoardConsole {
 	private Board board;
 	private Scanner scn;
@@ -25,36 +24,28 @@ public class BoardConsole {
 		System.out.println("Game started! \n");
 		
 		// Game loop start
-		do {
-			System.out.println(board.toString());
-			
-			try {
-				int choice = showControlOptions();
-				runChosenOption(choice);		
-				if (board.reachObjective()) {
-					System.out.println("You did it, congratulations!");
-					wantToPlayAgain();
-				}
-
-			} catch (ExplosionException e) {
-				System.out.println("You hit a bomb, game over!");
-				try {
-					wantToPlayAgain();
-				} catch (ExitExcepetion e1) {
-					exitGame();
-				}
-				
-			} catch (ExitExcepetion e) {
-				exitGame();
-			}
-			
-		} while (playing);
-		// Game loop ends
+		do {gameCicle();} while (playing);	
+	}
+	
+	private void gameCicle() {
+		//...
 		
+		try {
+			System.out.println(board.toString());
+			int choice = showControlOptions();
+			runChosenOption(choice);		
+			
+			if (board.reachObjective()) {
+				System.out.println("You did it, congratulations!");
+				wantToPlayAgain();
+			}
+
+		} catch (ExitExcepetion e) {
+			exitGame();
+		}
 	}
 
 	private void exitGame() {
-		// TODO Auto-generated method stub
 		playing = false;
 		System.out.println("You exited the game");
 	}
@@ -68,19 +59,36 @@ public class BoardConsole {
 	private void runChosenOption(int choice) {
 		switch (choice) {
 			case 1: {
-				// Abrir um campo
-				openOneField();
+				// Open a field of the board
+				try {
+					openOneField();
+				} 
+				catch (ExplosionException e) {
+					board.showAllCamps();
+					System.out.println("You hit a bomb, game over!");
+					System.out.println(board.toString());
+					
+					try {
+						wantToPlayAgain();
+					} catch (ExitExcepetion e1) {
+						exitGame();
+					}
+				}
 				break;
 			}
+			
 			case 2: {
-				// Marcar um campo
+				// Mark a field of the board
 				markOneField();
 				break;
 			}
+			
 			case 0: {
 				// Sair do jogo
 				throw new ExitExcepetion();
 			}
+			
+			// In case of invalid option, ask again
 			default:
 				System.out.println("Invalid Option");
 				choice = showControlOptions();
@@ -104,12 +112,24 @@ public class BoardConsole {
 	
 	private int campLineChoice() {
 		System.out.print("Enter a line number [1-"+(board.getLines())+"]: ");
-		return scn.nextInt()-1;
+		int input = scn.nextInt()-1;
+		
+		if (input > board.getLines()-1) {
+			System.out.println("Invalid line value");
+			return campLineChoice();
+		}
+		return input;
 	}
 	
 	private int campColumnChoice() {
 		System.out.print("Enter a line number [1-"+(board.getColumns())+"]: ");
-		return scn.nextInt() - 1;
+		int input = scn.nextInt()-1;
+		
+		if (input > board.getColumns()-1) {
+			System.out.println("Invalid column value");
+			return campLineChoice();
+		}
+		return input;
 	}
 	
 	private void wantToPlayAgain() {
