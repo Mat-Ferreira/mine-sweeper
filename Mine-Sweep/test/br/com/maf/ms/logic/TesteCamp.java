@@ -178,11 +178,11 @@ class TesteCamp {
 		
 		campo.addNeighbour(n1);
 		campo.addNeighbour(n2);
-		campo.addNeighbour(n3);
+//		campo.addNeighbour(n3);
 		campo.openField();
 		
 		String result = campo.toString();
-		assertEquals("3", result);
+		assertEquals("2", result);
 	}
 	
 	@Test

@@ -83,7 +83,14 @@ public class Board {
 	private String buildBoard() {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
+		
+		for (int ind = 0; ind < columns; ind++) {
+			sb.append("  "+ (ind+1));
+		}
+		sb.append("\n");
+		
 		for (int l = 0; l < lines; l++) {
+			sb.append(""+ (l+1) );
 			for (int c = 0; c < columns; c++) {
 				sb.append(" ");
 				sb.append(camps.get(i));

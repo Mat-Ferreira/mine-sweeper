@@ -13,7 +13,6 @@ public class BoardConsole {
 	boolean playing = true;
 	
 	public BoardConsole(Board b) {
-		// TODO Auto-generated constructor stub
 		this.board = b;	
 		scn = new Scanner(System.in);
 		runGame();
